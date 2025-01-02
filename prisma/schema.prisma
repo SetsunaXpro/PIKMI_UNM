@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Sesuaikan dengan provider database Anda
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @default("default_username") 
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  student   Student?  @relation
+}
+
+model Student {
+  id        Int       @id @default(autoincrement())      
+  nim       Int       
+  college   String
+  major     String
+  name      String
+  userId    Int       @unique 
+  user      User      @relation(fields: [userId], references: [id])
+  points    Point[]   
+  history   History[] 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Activity {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  date        DateTime
+  histories   History[] 
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Point {
+  id        Int      @id @default(autoincrement())
+  value     Int
+  studentId Int
+  student   Student  @relation(fields: [studentId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int?
+}
+
+model History {
+  id         Int      @id @default(autoincrement())
+  activityId Int
+  studentId  Int
+  activity   Activity @relation(fields: [activityId], references: [id])
+  student    Student  @relation(fields: [studentId], references: [id])
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
