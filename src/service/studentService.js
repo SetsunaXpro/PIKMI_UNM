@@ -1,38 +1,17 @@
 const prisma = require("../config/prisma");
 
-const addPoints = async (value, userId) => {
+const getActivity = async (req, res) => {
+  const { id } = req.params;
   try {
-    const point = await prisma.point.create({
-      data: {
-        value,
-        userId,
-      },
-    });
-    return point;
-  } catch (error) {
-    console.error("Error adding points:", error);
-    throw error;
-  }
-};
-
-const deductPoints = async (req, res) => {
-  const { id, activity, points } = req.body;
-  try {
-    const updatedStudent = await prisma.student.update({
-      where: { id },
-      data: {
-        points: { decrement: points },
-        history: {
-          create: { activity, points: -points },
-        },
-      },
+    const activity = await prisma.activity.findMany({
+      where: { id: Number(id) },
     });
 
-    res.json({
-      message: "Points deducted successfully",
-      student: updatedStudent,
-    });
+    res
+      .status(201)
+      .json({ message: "Activity retrieved successfully", activity });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -51,21 +30,22 @@ const getHistory = async (req, res) => {
   }
 };
 
-const getStudents = async (req, res) => {
+const getAllStudents = async (req, res) => {
   try {
-    const students = await prisma.student.findMany({
-      include: {
-        points: true,
-        history: true,
-      },
-    });
+    const students = await prisma.student.findMany();
 
-    return res.json({
-      message: "Students retrieved successfully",
+    if (students.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No students found in the database" });
+    }
+
+    return res.status(200).json({
+      message: "All students retrieved successfully",
       data: students,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error retrieving students:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -87,34 +67,56 @@ const getStudent = async (req, res) => {
   }
 };
 
-const addStudentToUser = async (req, res) => {
-  const { userId, nim, college, name, major } = req.body;
+const pointRequest = async (req, res) => {
+  const { userId, pointsRequested, description, nim, name, college, major } =
+    req.body;
+
+  if (!userId) {
+    return res.status(400).json({ message: "userId tidak boleh kosong" });
+  }
+
+  if (!pointsRequested) {
+    return res
+      .status(400)
+      .json({ message: "pointsRequested tidak boleh kosong" });
+  }
 
   try {
-    const student = await prisma.student.create({
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { student: true },
+    });
+
+    if (!user || !user.student) {
+      return res.status(400).json({ message: "User bukan mahasiswa" });
+    }
+
+    const pointRequest = await prisma.requestPoint.create({
       data: {
+        studentId: user.student.id,
+        points: pointsRequested,
         nim: nim,
         name: name,
-        userId: userId,
         college: college,
         major: major,
+        description: description,
+        status: "pending",
       },
     });
 
-    return res
+    res
       .status(201)
-      .json({ message: "Student added successfully", student });
-  } catch (error) {
-    console.error("Error adding student:", error);
-    return res.status(500).json({ message: "Error adding student", error });
+      .json({ message: "Request point berhasil dibuat", data: pointRequest });
+  } catch (err) {
+    console.error("Error requesting point:", err); // Menggunakan 'err' yang sudah didefinisikan
+    res.status(500).json({ message: err.message });
   }
 };
 
 module.exports = {
   getStudent,
-  addStudentToUser,
-  getStudents,
-  addPoints,
-  deductPoints,
   getHistory,
+  getActivity,
+  getAllStudents,
+  pointRequest,
 };

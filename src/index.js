@@ -5,6 +5,9 @@ const dotenv = require("dotenv");
 const userRouter = require("./routes/userRouter");
 const studentRouter = require("./routes/studentRouter");
 const authRouter = require("./routes/authRouter");
+const moderatorRouter = require("./routes/moderatorRouter");
+const roleRouter = require("./routes/roleRouter");
+const pointRouter = require("./routes/pointRouter");
 
 dotenv.config();
 
@@ -22,6 +25,9 @@ app.get("/api", (req, res) => {
 app.use("/api/users", userRouter);
 app.use("/api/students", studentRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/moderator", moderatorRouter);
+app.use("/api/roles", roleRouter);
+app.use("/api/request", pointRouter);
 
 // Server
 app.listen(PORT, () => {
