@@ -566,8 +566,6 @@ body {
   border: 1px solid var(--gray);
   border-radius: 5px;
   font-size: 1rem;
-  width: 100%;
-  max-width: 400px;
 }
 
 .login-form input:focus {
@@ -579,6 +577,127 @@ body {
   color: #ff4444;
   text-align: center;
   margin-top: 1rem;
+}
+
+.register-container {
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.register-form input,
+.register-form select {
+  padding: 0.75rem;
+  border: 1px solid var(--gray);
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.register-form .section {
+  border: 1px solid var(--light);
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+.register-form .section-title {
+  font-size: 1.2rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-header {
+  text-align: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.modal-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-details {
+  margin-bottom: 1.5rem;
+}
+
+.modal-detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--light);
+}
+
+.modal-detail-item span {
+  font-size: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.modal-actions button {
+  flex: 1;
+}
+
+.modal-cancel {
+  background: var(--gray) !important;
 }
 
 @media screen and (max-width: 768px) {
