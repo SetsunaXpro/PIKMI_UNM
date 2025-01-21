@@ -3,7 +3,6 @@ const prisma = require("../config/prisma");
 const assignRole = async (req, res) => {
   const { userId, role, name, college, major, code, email, nim } = req.body;
 
-  // Memastikan data yang diperlukan ada sesuai dengan role yang dipilih
   if (!userId || !role || !name || !college || !major || !email) {
     return res.status(400).json({
       message:
@@ -11,7 +10,6 @@ const assignRole = async (req, res) => {
     });
   }
 
-  // Validasi data berdasarkan role
   if (role === "STUDENT" && !nim) {
     return res.status(400).json({
       message: "Data nim harus diberikan untuk role 'STUDENT'",
@@ -25,7 +23,6 @@ const assignRole = async (req, res) => {
   }
 
   try {
-    // Mencari user berdasarkan userId
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -34,7 +31,6 @@ const assignRole = async (req, res) => {
       return res.status(404).json({ message: "User tidak ditemukan" });
     }
 
-    // Menangani role "STUDENT"
     if (role === "STUDENT") {
       const studentExist = await prisma.student.findUnique({
         where: { userId },
@@ -50,7 +46,7 @@ const assignRole = async (req, res) => {
         data: {
           userId: userId,
           name: name,
-          nim: nim, // Menambahkan nim untuk role student
+          nim: nim,
           college: college,
           major: major,
           email: email,
@@ -63,7 +59,6 @@ const assignRole = async (req, res) => {
       });
     }
 
-    // Menangani role "MODERATOR"
     if (role === "MODERATOR") {
       const moderatorExist = await prisma.moderator.findUnique({
         where: { userId },
@@ -81,7 +76,7 @@ const assignRole = async (req, res) => {
           name: name,
           college: college,
           major: major,
-          code: code, // Menambahkan code untuk role moderator
+          code: code,
           email: email,
         },
       });
@@ -94,7 +89,6 @@ const assignRole = async (req, res) => {
 
     return res.status(400).json({ message: "Role tidak valid" });
   } catch (error) {
-    // Menangani error jika terjadi
     console.error("Error assigning role:", error);
     if (error.code === "P2002") {
       return res.status(400).json({ message: "User sudah memiliki peran ini" });

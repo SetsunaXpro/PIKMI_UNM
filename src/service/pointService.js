@@ -1,5 +1,3 @@
-// note
-
 const prisma = require("../config/prisma");
 
 const getPointRequest = async (req, res) => {

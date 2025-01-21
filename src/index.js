@@ -23,11 +23,11 @@ app.get("/api", (req, res) => {
   res.send("API Ready to use!");
 });
 app.use("/api/users", userRouter);
-app.use("/api/students", studentRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/moderator", moderatorRouter);
 app.use("/api/roles", roleRouter);
 app.use("/api/request", pointRouter);
+app.use("/api/students", studentRouter);
+app.use("/api/moderator", moderatorRouter);
 
 // Server
 app.listen(PORT, () => {
