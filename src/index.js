@@ -15,8 +15,14 @@ const app = express();
 const PORT = process.env.PORT || 2000;
 
 // Dependencies
-app.use(cors());
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: ["https://frontend-project.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 // Routes
 app.get("/api", (req, res) => {
